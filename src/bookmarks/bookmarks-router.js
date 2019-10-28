@@ -1,27 +1,12 @@
 const express = require('express')
 const uuid = require('uuid/v4')
 const logger = require('../logger')
-
+const bookmarks = require('../store.js')
 const app = express()
 
 const bookmarksRouter = express.Router()
 const bodyParser = express.json()
 
-const bookmarks = [{
-  title: "Google",
-  url: "www.google.com",
-  description: "Search Engine",
-  rating: 1,
-  id: 1
-  },
-  {
-  title: "ESPN",
-  url: "www.espn.com",
-  description: "Sports",
-  rating: 1,
-  id: 2
-  }
-];
 
 bookmarksRouter
   .route('/bookmarks')
