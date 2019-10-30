@@ -9,6 +9,13 @@ const app = express()
 const bookmarksRouter = express.Router()
 const bodyParser = express.json()
 
+const serializeBookmark = bookmark => ({
+  id: bookmark.id,
+  title: xss(bookmark.title),
+  url: bookmark.url,
+  description: xss(bookmark.description),
+  rating: Number(bookmark.rating),
+})
 
 bookmarksRouter
   .route('/bookmarks')
@@ -17,7 +24,7 @@ bookmarksRouter
       req.app.get('db')
     )
       .then(bookmarks => {
-        res.json(bookmarks)
+        res.json(bookmarks.map(serializeBookmark))
       })
       .catch(next)
   })
@@ -33,6 +40,15 @@ bookmarksRouter
       }
     }
 
+    const ratingNum = Number(rating)
+
+    if (!Number.isInteger(ratingNum) || ratingNum < 0 || ratingNum > 5) {
+      logger.error(`Invalid rating '${rating}' supplied`)
+      return res.status(400).send({
+        error: { message: `'rating' must be a number between 0 and 5` }
+      })
+    }
+
     BookmarksService.insertBookmark(
       req.app.get('db'),
       newBookmark
@@ -41,7 +57,7 @@ bookmarksRouter
         res
           .status(201)
           .location(`/bookmarks/${bookmark.id}`)
-          .json(bookmark)
+          .json(serializeBookmark(bookmark))
       })
       .catch(next)
   })
@@ -65,7 +81,7 @@ bookmarksRouter
       .catch(next)
   })
   .get((req, res, next) => {
-    res.json(serializeArticle(res.article))
+    res.json(serializeBookmark(res.bookmark))
   })
   .delete((req, res, next) => {
     BookmarksService.deleteBookmark(
