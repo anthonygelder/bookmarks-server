@@ -1,7 +1,7 @@
 const bookmarks = require('../src/store')
 const app = require('../src/app')
 
-describe('Unauthorized requests', () => {
+describe.skip('Unauthorized requests', () => {
   it('responds 401 Unauthorized for GET /bookmarks', () => {
     return supertest(app)
       .get('/bookmarks')
@@ -29,7 +29,7 @@ describe('Unauthorized requests', () => {
 })
 
 
-describe('GET /bookmarks', () => {
+describe.skip('GET /bookmarks', () => {
   it('gets the bookmarks from the store', () => {
     return supertest(app)
       .get('/bookmarks')
@@ -38,7 +38,7 @@ describe('GET /bookmarks', () => {
   })
 })
 
-describe('GET /bookmarks/:id', () => {
+describe.skip('GET /bookmarks/:id', () => {
   it('get bookmark from the store by id', () => {
     return supertest(app)
       .get(`/bookmarks/${bookmarks[1].id}`)
@@ -47,7 +47,7 @@ describe('GET /bookmarks/:id', () => {
   })
 })
 
-describe('POST /bookmarks', () => {
+describe.skip('POST /bookmarks', () => {
   it('responds 201 Created for POST /bookmarks', () => {
     const bookmark = {
       title: 'title',
